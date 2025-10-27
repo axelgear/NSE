@@ -264,15 +264,27 @@ export const useAppData = () => {
     notes?: string
   ): Promise<{ transactions: Transaction[]; totalNetAmount: number; totalBrokerage: number } | null> => {
     let remaining = quantity
-    const lots = getActiveLotsByName(stockName)
-    if (lots.length === 0) return null
+    const initialLots = getActiveLotsByName(stockName)
+    if (initialLots.length === 0) return null
 
+    // Validate available quantity
+    const available = initialLots.reduce((sum, s) => sum + s.quantity, 0)
+    if (remaining > available) {
+      throw new Error(`Requested quantity (${remaining}) exceeds available (${available})`)
+    }
+
+    const lotIdsQueue = initialLots.map(l => l.id)
     const transactions: Transaction[] = []
     let totalNetAmount = 0
     let totalBrokerage = 0
 
-    for (const lot of lots) {
-      if (remaining <= 0) break
+    while (remaining > 0 && lotIdsQueue.length > 0) {
+      const lotId = lotIdsQueue.shift() as string
+      // fetch the latest lot state to avoid stale quantities
+      const lot = data.value.stocks.find((s: Stock) => s.id === lotId)
+      if (!lot || lot.status === 'sold' || lot.quantity <= 0) {
+        continue
+      }
       const sellQty = Math.min(remaining, lot.quantity)
       const txn = await sellStock(lot.id, sellQty, price, purpose, notes)
       if (txn) {
@@ -281,6 +293,10 @@ export const useAppData = () => {
         totalBrokerage += txn.brokerage
       }
       remaining -= sellQty
+    }
+
+    if (remaining > 0) {
+      throw new Error('Failed to execute full quantity')
     }
 
     return { transactions, totalNetAmount, totalBrokerage }

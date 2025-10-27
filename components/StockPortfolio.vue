@@ -68,6 +68,12 @@
             <span v-else>Update Price (API)</span>
           </button>
           <button
+            @click="openUpdateGroup(group)"
+            class="flex-1 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+          >
+            Manual Update
+          </button>
+          <button
             @click="openSellGroup(group.name, group)"
             class="flex-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
           >

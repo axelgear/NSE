@@ -1,0 +1,276 @@
+{
+  "stocks": [
+    {
+      "id": "stock-1761586492279-jre8fjhut",
+      "name": "Tata Gold Exchange Traded Fund",
+      "symbol": "TATAGOLD",
+      "paid": 11030,
+      "tradePrice": 11.03,
+      "quantity": 0,
+      "currentPrice": 11.77,
+      "value": 11770,
+      "profitLoss": 740,
+      "status": "sold",
+      "purchaseDate": "2025-09-23T00:00:00.000Z",
+      "soldDate": "2025-10-27T17:36:06.591Z",
+      "soldPrice": 11.97,
+      "soldQuantity": 1000
+    },
+    {
+      "id": "stock-1761586712367-4nihrvk1c",
+      "name": "Tata Gold Exchange Traded Fund",
+      "symbol": "TATAGOLD",
+      "paid": 11030,
+      "tradePrice": 11.03,
+      "quantity": 0,
+      "currentPrice": 11.97,
+      "value": 11970,
+      "profitLoss": 940,
+      "status": "sold",
+      "purchaseDate": "2025-09-23T00:00:00.000Z",
+      "soldDate": "2025-10-27T17:39:41.943Z",
+      "soldPrice": 11.97,
+      "soldQuantity": 1000
+    },
+    {
+      "id": "stock-1761586989663-crls84pz1",
+      "name": "Tata Gold Exchange Traded Fund",
+      "symbol": "TATAGOLD",
+      "paid": 11030,
+      "tradePrice": 11.03,
+      "quantity": 1000,
+      "currentPrice": 0,
+      "value": 0,
+      "profitLoss": -11030,
+      "status": "active",
+      "purchaseDate": "2025-09-23T00:00:00.000Z"
+    },
+    {
+      "id": "stock-1761587019071-cbfrhtu6q",
+      "name": "Tata Gold Exchange Traded Fund",
+      "symbol": "TATAGOLD",
+      "paid": 477044.39999999997,
+      "tradePrice": 11.59,
+      "quantity": 41160,
+      "currentPrice": 0,
+      "value": 0,
+      "profitLoss": -477044.39999999997,
+      "status": "active",
+      "purchaseDate": "2025-10-06T00:00:00.000Z"
+    }
+  ],
+  "loans": [
+    {
+      "id": "loan-1761577218821-oyrroehlt",
+      "name": "Groww",
+      "principalAmount": 436980,
+      "totalEMI": 436980,
+      "emiPerMonth": 36670,
+      "paymentsSchedule": [
+        {
+          "month": 1,
+          "emiAmount": 36670,
+          "principalRemaining": 400310,
+          "paid": false,
+          "dueDate": "2025-10-02T18:30:00.000Z"
+        },
+        {
+          "month": 2,
+          "emiAmount": 36670,
+          "principalRemaining": 363640,
+          "paid": false,
+          "dueDate": "2025-11-02T18:30:00.000Z"
+        },
+        {
+          "month": 3,
+          "emiAmount": 36670,
+          "principalRemaining": 326970,
+          "paid": false,
+          "dueDate": "2025-12-02T18:30:00.000Z"
+        },
+        {
+          "month": 4,
+          "emiAmount": 36670,
+          "principalRemaining": 290300,
+          "paid": false,
+          "dueDate": "2026-01-02T18:30:00.000Z"
+        },
+        {
+          "month": 5,
+          "emiAmount": 36670,
+          "principalRemaining": 253630,
+          "paid": false,
+          "dueDate": "2026-02-02T18:30:00.000Z"
+        },
+        {
+          "month": 6,
+          "emiAmount": 36670,
+          "principalRemaining": 216960,
+          "paid": false,
+          "dueDate": "2026-03-02T18:30:00.000Z"
+        },
+        {
+          "month": 7,
+          "emiAmount": 36670,
+          "principalRemaining": 180290,
+          "paid": false,
+          "dueDate": "2026-04-02T18:30:00.000Z"
+        },
+        {
+          "month": 8,
+          "emiAmount": 36670,
+          "principalRemaining": 143620,
+          "paid": false,
+          "dueDate": "2026-05-02T18:30:00.000Z"
+        },
+        {
+          "month": 9,
+          "emiAmount": 36670,
+          "principalRemaining": 106950,
+          "paid": false,
+          "dueDate": "2026-06-02T18:30:00.000Z"
+        },
+        {
+          "month": 10,
+          "emiAmount": 36670,
+          "principalRemaining": 70280,
+          "paid": false,
+          "dueDate": "2026-07-02T18:30:00.000Z"
+        },
+        {
+          "month": 11,
+          "emiAmount": 36670,
+          "principalRemaining": 33610,
+          "paid": false,
+          "dueDate": "2026-08-02T18:30:00.000Z"
+        },
+        {
+          "month": 12,
+          "emiAmount": 33610,
+          "principalRemaining": 0,
+          "paid": false,
+          "dueDate": "2026-09-02T18:30:00.000Z"
+        }
+      ],
+      "startDate": "2025-10-27T00:00:00.000Z",
+      "paymentDay": 3
+    },
+    {
+      "id": "loan-1761577251901-n5i56wrbl",
+      "name": "Cred",
+      "principalAmount": 511911.28,
+      "totalEMI": 511911.28,
+      "emiPerMonth": 85427,
+      "paymentsSchedule": [
+        {
+          "month": 1,
+          "emiAmount": 85427,
+          "principalRemaining": 426484.28,
+          "paid": false,
+          "dueDate": "2025-10-02T18:30:00.000Z"
+        },
+        {
+          "month": 2,
+          "emiAmount": 85427,
+          "principalRemaining": 341057.28,
+          "paid": false,
+          "dueDate": "2025-11-02T18:30:00.000Z"
+        },
+        {
+          "month": 3,
+          "emiAmount": 85427,
+          "principalRemaining": 255630.28000000003,
+          "paid": false,
+          "dueDate": "2025-12-02T18:30:00.000Z"
+        },
+        {
+          "month": 4,
+          "emiAmount": 85427,
+          "principalRemaining": 170203.28000000003,
+          "paid": false,
+          "dueDate": "2026-01-02T18:30:00.000Z"
+        },
+        {
+          "month": 5,
+          "emiAmount": 85427,
+          "principalRemaining": 84776.28000000003,
+          "paid": false,
+          "dueDate": "2026-02-02T18:30:00.000Z"
+        },
+        {
+          "month": 6,
+          "emiAmount": 84776.28000000003,
+          "principalRemaining": 0,
+          "paid": false,
+          "dueDate": "2026-03-02T18:30:00.000Z"
+        }
+      ],
+      "startDate": "2025-10-27T00:00:00.000Z",
+      "paymentDay": 3
+    }
+  ],
+  "transactions": [
+    {
+      "id": "txn-1761586989663-i7f0dd5h0",
+      "type": "buy",
+      "stockId": "stock-1761586989663-crls84pz1",
+      "stockName": "Tata Gold Exchange Traded Fund",
+      "quantity": 1000,
+      "price": 11.03,
+      "totalAmount": 11030,
+      "brokerage": 26.4,
+      "netAmount": 11056.4,
+      "date": "2025-10-27T17:43:09.663Z",
+      "costPerShare": 11.03,
+      "costTotal": 11030,
+      "realizedPnL": 0,
+      "buyAmount": 11030,
+      "sellAmount": 0,
+      "profitLoss": 0
+    },
+    {
+      "id": "txn-1761587019071-kqn08kc25",
+      "type": "buy",
+      "stockId": "stock-1761587019071-cbfrhtu6q",
+      "stockName": "Tata Gold Exchange Traded Fund",
+      "quantity": 41160,
+      "price": 11.59,
+      "totalAmount": 477044.4,
+      "brokerage": 589.37,
+      "netAmount": 477633.77,
+      "date": "2025-10-27T17:43:39.071Z",
+      "costPerShare": 11.59,
+      "costTotal": 477044.39999999997,
+      "realizedPnL": 0,
+      "buyAmount": 477044.4,
+      "sellAmount": 0,
+      "profitLoss": 0
+    }
+  ],
+  "brokerageConfig": {
+    "buyRate": 0.1,
+    "sellRate": 0.1,
+    "minCharge": 5,
+    "maxCharge": 20,
+    "sttBuy": 0.1,
+    "sttSell": 0.025,
+    "exchangeCharges": 0.00297,
+    "sebiCharges": 0.00001,
+    "gst": 18,
+    "stampDutyBuy": 0.015,
+    "stampDutySell": 0.003
+  },
+  "lastUpdated": "2025-10-27T17:43:39.099Z",
+  "priceCache": {
+    "HDFCBANK": {
+      "symbol": "HDFCBANK",
+      "last_price": 26051,
+      "change": 0,
+      "percent_change": 0,
+      "day_high": 0,
+      "day_low": 0,
+      "volume": 0,
+      "last_update": "2025-10-27T17:26:04.589Z"
+    }
+  }
+}

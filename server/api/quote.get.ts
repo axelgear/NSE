@@ -43,7 +43,13 @@ export default defineEventHandler(async (event) => {
       })
       if (!htmlRes.ok) throw new Error(`Fallback page ${htmlRes.status}`)
       const html = await htmlRes.text()
-      const m = html.match(/"lastPrice"\s*:\s*"?([\d,]+(?:\.\d+)?)"?/i)
+      // Try to find the specific block for the requested symbol, then priceInfo.lastPrice
+      const symBlock = new RegExp(`"symbol"\s*:\s*"${symbol}"[\s\S]{0,2000}?"priceInfo"\s*:\s*\{[\s\S]*?"lastPrice"\s*:\s*"?([\d,]+(?:\.\d+)?)"?`, 'i')
+      let m = html.match(symBlock)
+      if (!m) {
+        // fallback: any lastPrice (less reliable)
+        m = html.match(/"priceInfo"\s*:\s*\{[\s\S]*?"lastPrice"\s*:\s*"?([\d,]+(?:\.\d+)?)"?/i)
+      }
       const lastPrice = m ? Number((m[1] || '0').replace(/,/g, '')) : 0
       if (!lastPrice) throw new Error('No lastPrice in page')
       const out = {

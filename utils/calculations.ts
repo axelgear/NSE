@@ -115,9 +115,16 @@ export const calculatePortfolioValue = (stocks: Stock[]): {
   profitLoss: number
   profitLossPercent: number
 } => {
-  const activeStocks = stocks.filter(s => s.status === 'active')
-  const totalInvested = activeStocks.reduce((sum, stock) => sum + stock.paid, 0)
-  const currentValue = activeStocks.reduce((sum, stock) => sum + stock.value, 0)
+  // Consider all holdings that are not fully sold (include 'active' and 'partial')
+  const activeStocks = stocks.filter(s => s.status !== 'sold')
+  const totalInvested = activeStocks.reduce((sum, stock) => sum + (stock.paid || 0), 0)
+  // Derive value using an effective price: prefer currentPrice>0, else peer price for same name, else tradePrice
+  const currentValue = activeStocks.reduce((sum, stock, _idx, arr) => {
+    const price = (stock.currentPrice && stock.currentPrice > 0)
+      ? stock.currentPrice
+      : (arr.find(p => p.name === stock.name && p.currentPrice && p.currentPrice > 0)?.currentPrice || stock.tradePrice || 0)
+    return sum + stock.quantity * price
+  }, 0)
   const profitLoss = currentValue - totalInvested
   const profitLossPercent = totalInvested > 0 ? (profitLoss / totalInvested) * 100 : 0
   
