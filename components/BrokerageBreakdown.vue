@@ -51,6 +51,10 @@
           <span>{{ formatCurrency(breakdown.sebiCharges) }}</span>
         </div>
         <div class="flex justify-between">
+          <span class="text-gray-500">IPFT (NSE)</span>
+          <span>{{ formatCurrency(breakdown.ipft) }}</span>
+        </div>
+        <div class="flex justify-between">
           <span class="text-gray-500">GST</span>
           <span>{{ formatCurrency(breakdown.gst) }}</span>
         </div>

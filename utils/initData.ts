@@ -239,17 +239,17 @@ export const initialData: AppData = {
   ],
   transactions: [],
   brokerageConfig: {
-    buyRate: 0.05,
-    sellRate: 0.05,
-    minCharge: 20,
-    maxCharge: 20,
-    sttBuy: 0.1,
-    sttSell: 0.025,
-    exchangeCharges: 0.00297,
-    sebiCharges: 0.00001,
-    gst: 18,
-    stampDutyBuy: 0.015,
-    stampDutySell: 0.003
+    buyRate: 0.1,           // 0.1% brokerage on buy (as per example)
+    sellRate: 0.1,          // 0.1% brokerage on sell (as per example)
+    minCharge: 5,           // Minimum ₹5 (as per example)
+    maxCharge: 20,          // Maximum ₹20 per order (as per example)
+    sttBuy: 0.1,            // 0.1% STT on buy (delivery)
+    sttSell: 0.025,         // 0.025% STT on sell (delivery)
+    exchangeCharges: 0.00297, // 0.00297% exchange charges
+    sebiCharges: 0.00001,   // 0.00001% SEBI turnover fees
+    gst: 18,                // 18% GST on brokerage + transaction charges
+    stampDutyBuy: 0.015,    // 0.015% stamp duty on buy
+    stampDutySell: 0.003    // 0.003% stamp duty on sell
   },
   lastUpdated: new Date().toISOString()
 }

@@ -31,6 +31,9 @@
             <p class="text-2xl font-bold text-orange-600 mt-1">
               {{ formatCurrency(nextPendingPayment.payment.emiAmount) }}
             </p>
+            <p v-if="nextPendingPayment.payment.dueDate" class="text-xs text-gray-500 mt-1">
+              Due on {{ new Date(nextPendingPayment.payment.dueDate).toLocaleDateString('en-IN') }}
+            </p>
           </div>
           <button
             @click="openPayEMI(nextPendingPayment)"
@@ -78,8 +81,9 @@
     </div>
 
     <!-- Payment History by Loan -->
-    <div v-for="loan in data.loans" :key="loan.id" class="bg-white rounded-lg shadow-sm p-6">
-      <h3 class="text-lg font-bold text-gray-900 mb-4">{{ loan.name }} - Payment History</h3>
+  <div v-for="loan in data.loans" :key="loan.id" class="bg-white rounded-lg shadow-sm p-6">
+      <h3 class="text-lg font-bold text-gray-900 mb-2">{{ loan.name }} - Payment History</h3>
+      <p class="text-xs text-gray-500 mb-4">Due on {{ loan.paymentDay || 3 }} of each month</p>
       <div class="space-y-2">
         <div
           v-for="payment in loan.paymentsSchedule"
@@ -97,6 +101,7 @@
             <div>
               <p class="font-semibold">Month {{ payment.month }}</p>
               <p class="text-sm text-gray-500">{{ formatCurrency(payment.emiAmount) }}</p>
+              <p v-if="payment.dueDate" class="text-[11px] text-gray-400">Due: {{ new Date(payment.dueDate).toLocaleDateString('en-IN') }}</p>
               <p v-if="payment.paidDate" class="text-xs text-gray-400">
                 Paid on {{ formatDate(payment.paidDate) }}
               </p>
@@ -220,20 +225,45 @@ const sellForEMIQuantity = ref(1)
 const sellForEMIPrice = ref(0)
 
 const emiStats = computed(() => calculateEMIRequired(data.value.loans))
-const activeStocks = computed(() => data.value.stocks.filter(s => s.status === 'active'))
+const activeStocks = computed(() => data.value.stocks.filter((s: Stock) => s.status === 'active'))
 
+// Show the earliest due date across all loans, including all items due that day
 const nextPendingPayment = computed(() => {
-  for (const loan of data.value.loans) {
-    const payment = loan.paymentsSchedule.find(p => !p.paid)
-    if (payment) {
-      return {
-        loan,
-        loanName: loan.name,
-        payment
+  type Item = { loan: Loan; loanName: string; payment: EMIPayment }
+  const items: { loan: Loan; p: EMIPayment; due: Date }[] = []
+  const today = new Date()
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+
+  for (const loan of data.value.loans as Loan[]) {
+    for (const p of loan.paymentsSchedule as EMIPayment[]) {
+      if (!p.paid) {
+        const due = p.dueDate
+          ? new Date(p.dueDate)
+          : (() => {
+              const s = loan.startDate ? new Date(loan.startDate) : new Date()
+              const base = new Date(s)
+              base.setMonth(base.getMonth() + (p.month - 1))
+              return new Date(base.getFullYear(), base.getMonth(), Math.min(loan.paymentDay || 3, 28))
+            })()
+        items.push({ loan, p, due })
       }
     }
   }
-  return null
+
+  if (items.length === 0) return null
+  const future = items.filter(i => i.due && i.due >= startOfDay)
+  const pool = future.length > 0 ? future : items
+  pool.sort((a, b) => a.due.getTime() - b.due.getTime())
+  const firstDate = pool[0]!.due
+  const sameDay = pool.filter(i => i.due && i.due.getFullYear() === firstDate.getFullYear() && i.due.getMonth() === firstDate.getMonth() && i.due.getDate() === firstDate.getDate())
+  const total = sameDay.reduce((sum, i) => sum + (i.p.emiAmount || 0), 0)
+
+  // Return a merged item with total on that date and list of loans
+  return {
+    loan: { ...sameDay[0]!.loan },
+    loanName: `${sameDay.length} loan(s)` as any,
+    payment: { ...sameDay[0]!.p, emiAmount: total, dueDate: firstDate.toISOString() } as EMIPayment
+  } as Item
 })
 
 const emiSellBreakdown = computed(() => {
@@ -260,11 +290,11 @@ const updateEMICalculations = () => {
   // Trigger reactivity
 }
 
-const confirmSellForEMI = () => {
+const confirmSellForEMI = async () => {
   if (!selectedStockForEMI.value || !selectedEMIPayment.value) return
 
   // Sell the stock
-  const transaction = sellStocksForEMI(
+  const transaction = await sellStocksForEMI(
     selectedStockForEMI.value.id,
     sellForEMIQuantity.value,
     sellForEMIPrice.value,

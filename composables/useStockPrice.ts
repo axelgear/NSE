@@ -1,5 +1,5 @@
 import type { Stock } from '~/types'
-import { fetchStockPrice, fetchMultipleStockPrices, getStockSymbolSuggestions } from '~/utils/stockApi'
+import { fetchStockPrice, fetchMultipleStockPrices, getStockSymbolSuggestions, searchLocalSymbols } from '~/utils/stockApi'
 
 export const useStockPrice = () => {
   const { data, updateStock, saveAppData } = useAppData()
@@ -8,7 +8,7 @@ export const useStockPrice = () => {
    * Update current price for a single stock from API
    */
   const updateStockPriceFromAPI = async (stockId: string) => {
-    const stock = data.value.stocks.find(s => s.id === stockId)
+    const stock = data.value.stocks.find((s: Stock) => s.id === stockId)
     if (!stock || !stock.symbol) {
       throw new Error('Stock not found or no symbol specified')
     }
@@ -43,10 +43,10 @@ export const useStockPrice = () => {
    */
   const syncPriceAcrossStocks = (stockName: string, newPrice: number) => {
     const matchingStocks = data.value.stocks.filter(
-      s => s.name.toLowerCase() === stockName.toLowerCase() && s.status === 'active'
+      (s: Stock) => s.name.toLowerCase() === stockName.toLowerCase() && s.status === 'active'
     )
 
-    matchingStocks.forEach(stock => {
+    matchingStocks.forEach((stock: Stock) => {
       const newValue = stock.quantity * newPrice
       const newProfitLoss = newValue - stock.paid
 
@@ -68,10 +68,10 @@ export const useStockPrice = () => {
     if (!priceData) return null
 
     const matchingStocks = data.value.stocks.filter(
-      s => s.symbol === symbol && s.status === 'active'
+      (s: Stock) => s.symbol === symbol && s.status === 'active'
     )
 
-    matchingStocks.forEach(stock => {
+    matchingStocks.forEach((stock: Stock) => {
       const newValue = stock.quantity * priceData.last_price
       const newProfitLoss = newValue - stock.paid
 
@@ -98,9 +98,9 @@ export const useStockPrice = () => {
   const updateAllStockPrices = async () => {
     const uniqueSymbols = [...new Set(
       data.value.stocks
-        .filter(s => s.symbol && s.status === 'active')
-        .map(s => s.symbol!)
-    )]
+        .filter((s: Stock) => s.symbol && s.status === 'active')
+        .map((s: Stock) => s.symbol as string)
+    )] as string[]
 
     if (uniqueSymbols.length === 0) {
       throw new Error('No stocks with symbols to update')
@@ -111,10 +111,10 @@ export const useStockPrice = () => {
     // Update all matching stocks
     Object.entries(priceData).forEach(([symbol, price]) => {
       const matchingStocks = data.value.stocks.filter(
-        s => s.symbol === symbol && s.status === 'active'
+        (s: Stock) => s.symbol === symbol && s.status === 'active'
       )
 
-      matchingStocks.forEach(stock => {
+      matchingStocks.forEach((stock: Stock) => {
         const newValue = stock.quantity * price.last_price
         const newProfitLoss = newValue - stock.paid
 
@@ -136,8 +136,12 @@ export const useStockPrice = () => {
   /**
    * Get suggested symbol for a stock name
    */
-  const getSuggestedSymbol = (stockName: string) => {
-    return getStockSymbolSuggestions(stockName)
+  const getSuggestedSymbol = async (stockName: string): Promise<string> => {
+    return await getStockSymbolSuggestions(stockName)
+  }
+
+  const searchSymbols = async (query: string) => {
+    return await searchLocalSymbols(query)
   }
 
   /**
@@ -151,7 +155,7 @@ export const useStockPrice = () => {
    * Get unique stock names (for grouping)
    */
   const getUniqueStockNames = computed(() => {
-    return [...new Set(data.value.stocks.map(s => s.name))]
+    return [...new Set(data.value.stocks.map((s: Stock) => s.name))]
   })
 
   /**
@@ -159,7 +163,7 @@ export const useStockPrice = () => {
    */
   const getStocksByName = (stockName: string) => {
     return data.value.stocks.filter(
-      s => s.name.toLowerCase() === stockName.toLowerCase()
+      (s: Stock) => s.name.toLowerCase() === stockName.toLowerCase()
     )
   }
 
@@ -169,6 +173,7 @@ export const useStockPrice = () => {
     updateAllStocksBySymbol,
     updateAllStockPrices,
     getSuggestedSymbol,
+    searchSymbols,
     getCachedPrice,
     getUniqueStockNames,
     getStocksByName

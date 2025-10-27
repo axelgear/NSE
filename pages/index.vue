@@ -18,11 +18,27 @@
               Update Prices
             </button>
             <button
+              @click="fixBrokerageConfig" 
+              class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors flex items-center gap-2"
+              title="Fix brokerage calculation issues"
+            >
+              <Icon name="mdi:calculator" />
+              Fix Calculator
+            </button>
+            <button
               @click="refreshData"
               class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             >
               <Icon name="mdi:refresh" />
               Refresh
+            </button>
+            <button
+              @click="refreshSymbols"
+              class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2"
+              title="Download latest NSE equity list"
+            >
+              <Icon name="mdi:download" />
+              Update Symbols
             </button>
             <button
               @click="exportData"
@@ -63,9 +79,9 @@
           color="purple"
         />
         <SummaryCard
-          title="Next EMI"
-          :value="formatCurrency(emiStats.nextEMIAmount)"
-          subtitle="Due this month"
+          :title="`Upcoming EMI (${upcoming.count})`"
+          :value="formatCurrency(upcoming.totalAmount)"
+          :subtitle="upcoming.date ? new Date(upcoming.date).toLocaleDateString('en-IN') : 'All paid'"
           icon="mdi:calendar-clock"
           color="orange"
         />
@@ -103,8 +119,9 @@
 </template>
 
 <script setup lang="ts">
-import { calculatePortfolioValue, calculateEMIRequired, formatCurrency } from '~/utils/calculations'
+import { calculatePortfolioValue, calculateEMIRequired, calculateUpcomingEMI, formatCurrency } from '~/utils/calculations'
 import { exportData as exportDataUtil } from '~/utils/storage'
+import { forceUpdateBrokerageConfig, checkConfigurationVersion } from '~/utils/forceUpdateConfig'
 
 const { data, refreshData: refreshAppData } = useAppData()
 const { updateAllStockPrices } = useStockPrice()
@@ -121,6 +138,7 @@ const tabs = [
 
 const portfolioStats = computed(() => calculatePortfolioValue(data.value.stocks))
 const emiStats = computed(() => calculateEMIRequired(data.value.loans))
+const upcoming = computed(() => calculateUpcomingEMI(data.value.loans))
 
 const refreshData = () => {
   refreshAppData()
@@ -139,6 +157,42 @@ const updateAllPrices = async () => {
     alert(error.message || 'Failed to update prices. Make sure stocks have symbols configured.')
   } finally {
     updatingAllPrices.value = false
+  }
+}
+
+const fixBrokerageConfig = async () => {
+  const isCorrect = checkConfigurationVersion()
+  
+  if (isCorrect) {
+    alert('✅ Brokerage configuration is already correct!\n\nCurrent settings:\n• Buy/Sell Rate: 0.1%\n• Min Charge: ₹5\n• Max Charge: ₹20\n\nIf you\'re still seeing incorrect calculations, try refreshing the page.')
+    return
+  }
+  
+  const shouldUpdate = confirm(
+    '🔧 Fix Brokerage Calculator\n\n' +
+    'This will update your brokerage configuration to:\n' +
+    '• Buy/Sell Rate: 0.1%\n' +
+    '• Min Charge: ₹5\n' +
+    '• Max Charge: ₹20\n\n' +
+    'This follows Indian market standards and will fix calculation issues.\n\n' +
+    'Continue?'
+  )
+  
+  if (shouldUpdate) {
+    await forceUpdateBrokerageConfig()
+  }
+}
+
+const refreshSymbols = async () => {
+  try {
+    const res = await $fetch('/api/symbols/refresh')
+    if ((res as any)?.success) {
+      alert('Symbols updated successfully!')
+    } else {
+      alert('Failed to update symbols')
+    }
+  } catch (e: any) {
+    alert(e?.statusMessage || 'Failed to update symbols')
   }
 }
 

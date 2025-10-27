@@ -21,6 +21,7 @@ export interface EMIPayment {
   principalRemaining: number
   paid: boolean
   paidDate?: string
+  dueDate?: string
   stocksSold?: string[]
 }
 
@@ -32,6 +33,7 @@ export interface Loan {
   emiPerMonth: number
   paymentsSchedule: EMIPayment[]
   startDate: string
+  paymentDay?: number   // Default 3 (3rd of every month)
 }
 
 export interface Transaction {
@@ -50,6 +52,15 @@ export interface Transaction {
   purpose?: 'emi' | 'reinvest' | 'profit' | 'other'  // Purpose of sale
   linkedBuyId?: string  // If sold to buy another stock, link to new stock purchase
   notes?: string
+  reverted?: boolean
+  revertedAt?: string
+  brokerageOverridden?: boolean
+  costPerShare?: number
+  costTotal?: number
+  realizedPnL?: number
+  buyAmount?: number
+  sellAmount?: number
+  profitLoss?: number
 }
 
 export interface BrokerageConfig {
@@ -61,6 +72,7 @@ export interface BrokerageConfig {
   sttSell: number           // STT on sell (0.025%)
   exchangeCharges: number   // Exchange charges (0.00297%)
   sebiCharges: number       // SEBI turnover fees (0.00001%)
+  ipftCharges?: number      // IPFT (NSE) charges (0.0001%)
   gst: number               // GST on brokerage + transaction charges (18%)
   stampDutyBuy: number      // Stamp duty on buy (0.015%)
   stampDutySell: number     // Stamp duty on sell (0.003%)
@@ -72,6 +84,7 @@ export interface BrokerageBreakdown {
   stt: number
   exchangeCharges: number
   sebiCharges: number
+  ipft: number
   gst: number
   stampDuty: number
   totalCharges: number

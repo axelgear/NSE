@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brokerage Calculator Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-case {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .correct { color: green; font-weight: bold; }
+        .incorrect { color: red; font-weight: bold; }
+        .formula { 
+            background-color: #f8f9fa; 
+            padding: 10px; 
+            border-left: 4px solid #007bff;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧮 Brokerage Calculator Test Results</h1>
+    <p>This page demonstrates the corrected brokerage calculations based on Indian market standards.</p>
+
+    <div class="test-case">
+        <h2>📐 Formula Used</h2>
+        <div class="formula">
+            Brokerage = max(min(rate% × Turnover, maxCharge), minCharge)
+        </div>
+        <p><strong>Configuration:</strong></p>
+        <ul>
+            <li>Rate: 0.1% (both buy and sell)</li>
+            <li>Min Charge: ₹5</li>
+            <li>Max Charge: ₹20</li>
+        </ul>
+    </div>
+
+    <div class="test-case">
+        <h2>🧪 Test Cases from Images</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Turnover</th>
+                    <th>Calculation</th>
+                    <th>Correct Result</th>
+                    <th>Image Showed</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sell 1 share @ ₹120</td>
+                    <td>₹120</td>
+                    <td>max(min(0.1% × 120, 20), 5) = max(min(0.12, 20), 5) = max(0.12, 5)</td>
+                    <td class="correct">₹5</td>
+                    <td class="incorrect">₹20</td>
+                    <td class="incorrect">❌ Fixed</td>
+                </tr>
+                <tr>
+                    <td>Sell 50 shares @ ₹1000</td>
+                    <td>₹50,000</td>
+                    <td>max(min(0.1% × 50,000, 20), 5) = max(min(50, 20), 5) = max(20, 5)</td>
+                    <td class="correct">₹20</td>
+                    <td class="incorrect">₹25</td>
+                    <td class="incorrect">❌ Fixed</td>
+                </tr>
+                <tr>
+                    <td>Medium transaction</td>
+                    <td>₹10,000</td>
+                    <td>max(min(0.1% × 10,000, 20), 5) = max(min(10, 20), 5) = max(10, 5)</td>
+                    <td class="correct">₹10</td>
+                    <td>-</td>
+                    <td class="correct">✅ Correct</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="test-case">
+        <h2>🔧 How to Fix</h2>
+        <ol>
+            <li><strong>Open your Stock & EMI Dashboard</strong></li>
+            <li><strong>Click the "Fix Calculator" button</strong> in the header (orange button with calculator icon)</li>
+            <li><strong>Confirm the update</strong> when prompted</li>
+            <li><strong>Page will reload</strong> with correct configuration</li>
+            <li><strong>Test the calculations</strong> - they should now match the correct results above</li>
+        </ol>
+    </div>
+
+    <div class="test-case">
+        <h2>✅ Expected Results After Fix</h2>
+        <p>After applying the fix, you should see:</p>
+        <ul>
+            <li>✅ Small transactions (under ₹500): <strong>₹5 brokerage</strong> (minimum charge)</li>
+            <li>✅ Medium transactions (₹500 - ₹20,000): <strong>0.1% of turnover</strong></li>
+            <li>✅ Large transactions (over ₹20,000): <strong>₹20 brokerage</strong> (maximum charge)</li>
+        </ul>
+    </div>
+
+    <div class="test-case">
+        <h2>📚 Reference: Indian Market Standards</h2>
+        <p>This calculation follows the standard formula used by major Indian brokers like Groww, Zerodha, etc.</p>
+        <p><strong>Formula:</strong> Brokerage = max(min(Percentage × Trade_Value, Max_Charge), Min_Charge)</p>
+        <p>This ensures that:</p>
+        <ul>
+            <li>Very small trades don't get charged less than the minimum viable amount</li>
+            <li>Very large trades don't get charged excessively high amounts</li>
+            <li>Medium trades get charged proportionally to their value</li>
+        </ul>
+    </div>
+
+    <script>
+        // Test the formula in JavaScript
+        function calculateBrokerage(turnover, config) {
+            const calculatedBrokerage = (turnover * config.rate) / 100;
+            return Math.max(Math.min(calculatedBrokerage, config.maxCharge), config.minCharge);
+        }
+
+        const config = {
+            rate: 0.1,
+            minCharge: 5,
+            maxCharge: 20
+        };
+
+        console.log('=== Brokerage Calculator Test ===');
+        console.log('Test 1 (₹120):', calculateBrokerage(120, config)); // Should be 5
+        console.log('Test 2 (₹50,000):', calculateBrokerage(50000, config)); // Should be 20
+        console.log('Test 3 (₹10,000):', calculateBrokerage(10000, config)); // Should be 10
+    </script>
+</body>
+</html>
